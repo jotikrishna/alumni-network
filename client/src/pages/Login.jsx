@@ -23,7 +23,7 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const res = await login(email.trim(), password);
+      const res = await login(email.trim().toLowerCase(), password);
       if (res.user?.role === 'admin') {
         navigate('/admin');
       } else {

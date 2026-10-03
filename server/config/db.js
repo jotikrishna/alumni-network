@@ -1,53 +1,30 @@
+const dns = require('node:dns');
+dns.setServers(['8.8.8.8', '8.8.4.4']);
+
 const mongoose = require('mongoose');
 const ensureAdminUser = require('../utils/seedAdmin');
 
-let mongoMemoryServer = null;
-
 const connectDB = async () => {
-  const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/alumni_connect';
-
-  try {
-    // Attempt standard MongoDB connection with short serverSelectionTimeoutMS
-    await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 3000
-    });
-    console.log(`MongoDB Connected: ${mongoose.connection.host}`);
-  } catch (error) {
-    console.warn(`Local MongoDB connection failed (${error.message}). Initializing MongoMemoryServer fallback...`);
     try {
-      const path = require('path');
-      const fs = require('fs');
-      const { MongoMemoryServer } = require('mongodb-memory-server');
+        const uri = process.env.MONGO_URI;
 
-      const dbDir = path.join(__dirname, '../.data/db');
-      if (!fs.existsSync(dbDir)) {
-        fs.mkdirSync(dbDir, { recursive: true });
-      }
+        if (!uri) {
+            throw new Error('MONGO_URI is not defined in the .env file');
+        }
 
-      try {
-        mongoMemoryServer = await MongoMemoryServer.create({
-          instance: {
-            dbPath: dbDir,
-            storageEngine: 'wiredTiger'
-          }
+        await mongoose.connect(uri, {
+            serverSelectionTimeoutMS: 10000
         });
-        const memoryUri = mongoMemoryServer.getUri();
-        await mongoose.connect(memoryUri);
-        console.log(`Persistent Mongo Database Connected: ${memoryUri}`);
-      } catch (lockErr) {
-        mongoMemoryServer = await MongoMemoryServer.create();
-        const memoryUri = mongoMemoryServer.getUri();
-        await mongoose.connect(memoryUri);
-        console.log(`In-Memory MongoDB Started & Connected: ${memoryUri}`);
-      }
-    } catch (memErr) {
-      console.error('Failed to start MongoMemoryServer fallback:', memErr.message);
-      process.exit(1);
-    }
-  }
 
-  // Ensure admin user exists in DB
-  await ensureAdminUser();
+        console.log(`MongoDB Connected Successfully: ${mongoose.connection.host}`);
+
+        // Ensure admin user exists in the database
+        await ensureAdminUser();
+
+    } catch (error) {
+        console.error('MongoDB Connection Failed:', error.message);
+        process.exit(1);
+    }
 };
 
 module.exports = connectDB;

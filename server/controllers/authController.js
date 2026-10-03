@@ -18,7 +18,7 @@ const register = async (req, res) => {
 
     // Validation
     if (!name || !email || !password || !graduationYear || !department) {
-      return res.status(400).json({ message: 'Please provide all required fields' });
+      return res.status(400).json({ message: 'Please provide all required fields (Name, Email, Password, Department, Graduation Year)' });
     }
 
     if (password.length < 6) {
@@ -29,30 +29,30 @@ const register = async (req, res) => {
       return res.status(400).json({ message: 'Passwords do not match' });
     }
 
-    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedEmail = String(email).trim().toLowerCase();
 
     // Check if user exists
     const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) {
-      return res.status(400).json({ message: 'An account with this email already exists' });
+      return res.status(400).json({ message: 'An account with this email address already exists. Please login instead.' });
     }
 
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create user
+    // Create user in MongoDB Atlas
     const user = await User.create({
-      name: name.trim(),
+      name: String(name).trim(),
       email: normalizedEmail,
       password: hashedPassword,
       graduationYear: Number(graduationYear),
-      department,
-      company: company || '',
-      jobTitle: jobTitle || '',
-      location: location || '',
-      bio: bio || '',
-      skills: Array.isArray(skills) ? skills : (skills ? skills.split(',').map(s => s.trim()) : [])
+      department: String(department).trim(),
+      company: company ? String(company).trim() : '',
+      jobTitle: jobTitle ? String(jobTitle).trim() : '',
+      location: location ? String(location).trim() : '',
+      bio: bio ? String(bio).trim() : '',
+      skills: Array.isArray(skills) ? skills : (skills ? String(skills).split(',').map(s => s.trim()).filter(Boolean) : [])
     });
 
     if (user) {
@@ -76,10 +76,10 @@ const register = async (req, res) => {
         }
       });
     } else {
-      return res.status(400).json({ message: 'Invalid user data received' });
+      return res.status(400).json({ message: 'Invalid user data received. Unable to save profile.' });
     }
   } catch (error) {
-    console.error('Register Controller Error:', error);
+    console.error('Register Controller Error:', error.message || error);
     return res.status(500).json({ message: error.message || 'Server error during registration' });
   }
 };
@@ -95,18 +95,20 @@ const login = async (req, res) => {
       return res.status(400).json({ message: 'Please enter both email and password' });
     }
 
-    // Find user by email
-    const user = await User.findOne({ email: email.trim().toLowerCase() });
+    const normalizedEmail = String(email).trim().toLowerCase();
+
+    // Find user by email in MongoDB Atlas
+    const user = await User.findOne({ email: normalizedEmail });
 
     if (!user) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(401).json({ message: 'No account found with this email address. Please check your email or register.' });
     }
 
-    // Check password match
+    // Check password match using bcrypt
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(401).json({ message: 'Incorrect password. Please verify your password and try again.' });
     }
 
     const token = generateToken(user._id);
@@ -130,7 +132,7 @@ const login = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Login Controller Error:', error);
+    console.error('Login Controller Error:', error.message || error);
     return res.status(500).json({ message: error.message || 'Server error during login' });
   }
 };

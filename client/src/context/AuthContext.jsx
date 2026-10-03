@@ -16,8 +16,10 @@ export const AuthProvider = ({ children }) => {
           const res = await API.get('/auth/me');
           setUser(res.data);
         } catch (error) {
-          console.error('Failed to fetch authenticated user:', error);
-          logout();
+          console.error('Failed to fetch authenticated user:', error.message || error);
+          if (error.response && error.response.status === 401) {
+            logout();
+          }
         }
       } else {
         setUser(null);

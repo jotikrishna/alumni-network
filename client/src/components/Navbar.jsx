@@ -73,6 +73,7 @@ const Navbar = () => {
                   src={user?.profileImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}
                   alt={user?.name || 'User'}
                   className="user-avatar"
+                  onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'; }}
                 />
                 <span className="user-name">{user?.name?.split(' ')[0]}</span>
               </Link>

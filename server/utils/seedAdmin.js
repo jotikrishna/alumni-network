@@ -25,7 +25,7 @@ const ensureAdminUser = async () => {
         skills: ['System Administration', 'Security', 'Database Management'],
         profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'
       });
-      console.log('🛡️ Admin Account Verified: admin@alumniconnect.com / Admin@123');
+      console.log('🛡️ Admin Account Verified: admin@alumniconnect.com');
     } else {
       let updated = false;
       if (adminUser.role !== 'admin') {
@@ -40,7 +40,7 @@ const ensureAdminUser = async () => {
       }
       if (updated) {
         await adminUser.save();
-        console.log('🛡️ Admin Account Synced: role set to admin & password synced to Admin@123');
+        console.log('🛡️ Admin Account Synced: role set to admin');
       }
     }
 

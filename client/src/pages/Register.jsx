@@ -67,7 +67,8 @@ const Register = () => {
       setLoading(true);
       const payload = {
         ...formData,
-        email: formData.email.trim()
+        name: formData.name.trim(),
+        email: formData.email.trim().toLowerCase()
       };
       await register(payload);
       setSuccess('Registration successful');
@@ -102,7 +103,7 @@ const Register = () => {
         {success && (
           <div className="alert alert-success">
             <CheckCircle size={18} />
-            <span>{success}! Redirecting to login...</span>
+            <span>{success}! Redirecting to dashboard...</span>
           </div>
         )}
 

@@ -131,6 +131,7 @@ const AlumniDirectory = () => {
                   src={person.profileImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}
                   alt={person.name}
                   className="alumnus-avatar"
+                  onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'; }}
                 />
                 <div className="alumnus-title-info">
                   <h3>{person.name}</h3>

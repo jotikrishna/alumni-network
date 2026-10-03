@@ -293,7 +293,12 @@ const AdminDashboard = () => {
                         <tr key={u._id}>
                           <td>
                             <div className="user-cell">
-                              <img src={u.profileImage} alt={u.name} className="table-avatar" />
+                              <img
+                                src={u.profileImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}
+                                alt={u.name}
+                                className="table-avatar"
+                                onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'; }}
+                              />
                               <div>
                                 <strong>{u.name}</strong>
                                 <div className="text-muted text-sm">{u.email}</div>
@@ -341,7 +346,12 @@ const AdminDashboard = () => {
                         <tr key={u._id}>
                           <td>
                             <div className="user-cell">
-                              <img src={u.profileImage} alt={u.name} className="table-avatar" />
+                              <img
+                                src={u.profileImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}
+                                alt={u.name}
+                                className="table-avatar"
+                                onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'; }}
+                              />
                               <div>
                                 <strong>{u.name}</strong>
                                 <div className="text-muted text-sm">{u.email}</div>

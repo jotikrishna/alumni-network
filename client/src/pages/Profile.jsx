@@ -64,6 +64,7 @@ const Profile = () => {
               src={formData.profileImage || user?.profileImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}
               alt={user?.name}
               className="user-profile-avatar"
+              onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'; }}
             />
           </div>
           <div className="header-info">

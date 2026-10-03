@@ -59,6 +59,7 @@ const AlumniProfile = () => {
             src={alumnus.profileImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}
             alt={alumnus.name}
             className="profile-large-avatar"
+            onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'; }}
           />
           <div className="profile-hero-info">
             <h1>{alumnus.name}</h1>
