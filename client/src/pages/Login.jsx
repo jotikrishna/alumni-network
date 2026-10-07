@@ -31,7 +31,7 @@ const Login = () => {
       }
     } catch (err) {
       if (!err.response) {
-        setError('Unable to connect to backend server. Please verify the server is running on http://localhost:5000.');
+        setError('Unable to connect to backend server. Please try again later.');
       } else {
         setError(err.response?.data?.message || 'Invalid email or password');
       }
